@@ -36,7 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/customborder">
+            android:background="@drawable/customborder"
+            android:layout_weight="0.05">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -106,7 +107,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.1"
                 android:text="Lately Accident GPS &amp; Time"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:paddingTop="10dp"/>
 
         </LinearLayout>
         <LinearLayout
@@ -155,7 +157,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:textAlignment="center">
+            android:textAlignment="center"
+            android:paddingTop="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -187,6 +190,34 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:text="Loading"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:textAlignment="center"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:text="Distance to Accident Location"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/customborder">
+            <TextView
+                android:id="@+id/textview_distance"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:text="Distance ..."
+                android:textAlignment="center"/>
         </LinearLayout>
 
     </LinearLayout>
