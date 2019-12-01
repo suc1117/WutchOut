@@ -28,23 +28,113 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:paddingTop="10sp"
         android:layout_weight="1">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/customborder">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:text="Obstacle Image"
+                android:textSize="8pt"
+                android:layout_weight="0.15"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05">
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.6"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:background="@drawable/customimageborder"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05">
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.08">
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="10pt" />
+            android:textSize="10pt"
+            android:background="@drawable/customborder"/>
 
-        <ImageView
-            android:id="@+id/imageView1"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.45">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.75"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:srcCompat="@mipmap/ic_launcher" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/customborder">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:text="GPS : "/>
+            <TextView
+                android:id="@+id/textview_gps_lat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="GPS_lat"/>
+            <TextView
+                android:id="@+id/textview_gps_lon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="GPS_lon"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/customborder">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:text="Time : "/>
+
+            <TextView
+                android:id="@+id/textview_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:text="Time"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

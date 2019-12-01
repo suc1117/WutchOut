@@ -6,7 +6,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.IOException;
+import java.io.FileOutputStream;
 
 public class ConnectFTP {
     private final String TAG = "Connect FTP";
@@ -81,4 +81,31 @@ public class ConnectFTP {
         } catch (Exception e) { e.printStackTrace(); }
         return fileList;
     }
+
+    public boolean ftpRenameFile(String from, String to) {
+        boolean result = false;
+        try {
+            result = mFTPClient.rename(from, to);
+        } catch (Exception e) {
+            Log.d(TAG, "Couldn't rename file");
+        }
+        return result;
+    }
+
+    public boolean ftpDownloadFile(String srcFilePath, String desFilePath) {
+        boolean result = false;
+        try{
+            Log.d(TAG, "srcFilePath : "+srcFilePath);
+            Log.d(TAG, "desFilePath : "+desFilePath);
+            //mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
+            //mFTPClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+            FileOutputStream fos = new FileOutputStream(desFilePath);
+            result = mFTPClient.retrieveFile(srcFilePath, fos);
+            fos.close();
+        } catch (Exception e){
+            Log.d(TAG, "Download failed");
+        }
+        return result;
+    }
+
 }

@@ -1,10 +1,10 @@
 package com.example.wutchout;
 
-public class File {
+public class myFile {
     private String filename;
     private String filetype;
 
-    public File(String Filename, String Filetype) {
+    public myFile(String Filename, String Filetype) {
         filename = Filename;
         filetype = Filetype;
     }

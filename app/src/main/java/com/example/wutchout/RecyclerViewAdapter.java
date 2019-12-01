@@ -13,9 +13,9 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private Activity activity;
-    private List<File> file;
+    private List<myFile> file;
 
-    public RecyclerViewAdapter(Activity activity, List<File> file) {
+    public RecyclerViewAdapter(Activity activity, List<myFile> file) {
         this.activity = activity;
         this.file = file;
     }
@@ -36,6 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             name = (TextView) itemView.findViewById(R.id.ListFilename);
             type = (TextView) itemView.findViewById(R.id.ListFiletype);
 
+            /*
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -44,7 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
 
-            /*
+
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -66,9 +67,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        File data = file.get(position);
+        myFile data = file.get(position);
 
-        // 데이터 결합
+        // Data Combine
         holder.name.setText(data.getName());
         holder.type.setText(data.getType());
     }
