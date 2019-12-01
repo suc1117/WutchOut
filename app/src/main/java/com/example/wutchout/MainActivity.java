@@ -1,8 +1,10 @@
 package com.example.wutchout;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -25,12 +27,14 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
-    boolean status, image_flag = true;
-    int i, last_index=0;
+    boolean status;
+    int last_index=0;
     private ConnectFTP connectFTP;
     private final String TAG = "FTP ";
+    private SharedPreferences sharePref;
+    private SharedPreferences.Editor editor;
 
-    String Lately_Accident_File, currentPath, newFilePath, time_val, gps_lat, gps_lon;
+    String latelyAccidentFile, currentPath, makeFilePath, time_val, gps_lat, gps_lon;
     String[] FileParsingArray;
     String[][] currentFileList;
     ImageView imageView;
@@ -45,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         connectFTP = new ConnectFTP();
+
+        sharePref = getSharedPreferences("SHARE_PREF",MODE_PRIVATE);
+        editor = sharePref.edit();
+
         recyclerView = findViewById(R.id.recyclerView);
         textView_gps_lat = findViewById(R.id.textview_gps_lat);
         textView_gps_lon = findViewById(R.id.textview_gps_lon);
@@ -78,18 +86,20 @@ public class MainActivity extends AppCompatActivity {
                         currentPath = connectFTP.ftpGetDirectory();
                         dir.setText("Path : " + currentPath);
                         currentFileList = connectFTP.ftpGetFileList(currentPath);
-                        for (i=0; i<currentFileList.length; i++) {
-                            Log.d(TAG, currentFileList[i][0] + currentFileList[i][1]);
-                        }
-                        last_index=i;
-                        Lately_Accident_File=currentFileList[last_index-1][0];
-                        if (image_flag) {
+                        last_index=currentFileList.length-1;
+                        latelyAccidentFile =currentFileList[last_index][0];
+                        if (!(sharePref.getString("latelyAccident","0").equals(latelyAccidentFile))) {
+                            editor.putString("latelyAccident", latelyAccidentFile);
+                            editor.commit();
                             getImageThread.start();
                         }
 
+                        // Update Files List
                         for (int i = 0; i < currentFileList.length; i++) {
                             myfile.add(new myFile(currentFileList[i][0], currentFileList[i][1]));
                         }
+
+                        // Update UI & ImageView
                         recyclerViewAdapter = new RecyclerViewAdapter(ac, myfile);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -100,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.toString());
                                     imageView.setImageBitmap(myBitmap);
                                 }
-                                FileParsingArray=Lately_Accident_File.split(" ");
+                                FileParsingArray= latelyAccidentFile.split(" ");
                                 time_val=FileParsingArray[0]+" "+FileParsingArray[1];
                                 gps_lat=FileParsingArray[2];
                                 gps_lon=FileParsingArray[3].substring(0,FileParsingArray[3].length()-4);
@@ -121,9 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
         getImageThread = new Thread(new Runnable() {
             public void run() {
-                image_flag=false;
-                newFilePath = getApplicationContext().getFilesDir().toString();
-                file = new File(newFilePath,"main.png");
+                makeFilePath = getApplicationContext().getFilesDir().toString();
+                file = new File(makeFilePath,"main.png");
                 Log.d(TAG, "file : "+file);
                 File parent_dir = file.getParentFile();
                 Log.d(TAG, "parent_dir : "+parent_dir);
@@ -131,12 +140,12 @@ public class MainActivity extends AppCompatActivity {
                     parent_dir.mkdirs();
                     Log.d(TAG, "mkdir()");
                 }
-                Log.d(TAG, "newFilePath==desFilePath : "+newFilePath);
+                Log.d(TAG, "makeFilePath==desFilePath : "+ makeFilePath);
                 try {
                     file.createNewFile();
                     Log.d(TAG, "file.createNewFile()");
                 } catch (Exception e){}
-                connectFTP.ftpDownloadFile(currentPath +currentFileList[last_index-1][0], file.toString());
+                connectFTP.ftpDownloadFile(currentPath +currentFileList[last_index][0], file.toString());
             }
         });
     }
