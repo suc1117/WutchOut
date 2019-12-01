@@ -1,10 +1,19 @@
 package com.example.wutchout;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -27,12 +36,15 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
+    Location userLocation;
     boolean status;
     int last_index=0;
     private ConnectFTP connectFTP;
     private final String TAG = "FTP ";
     private SharedPreferences sharePref;
     private SharedPreferences.Editor editor;
+    private static final int REQUEST_CODE_LOCATION = 2;
+    LocationManager lm;
 
     String latelyAccidentFile, currentPath, makeFilePath, time_val, gps_lat, gps_lon;
     String[] FileParsingArray;
@@ -40,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
     Thread getImageThread;
     File file;
-    TextView textView_gps_lat, textView_gps_lon, textView_time;
+    TextView textView_gps_lat, textView_gps_lon, textview_gps_lat_user, textview_gps_lon_user, textView_time;
 
     private TextView dir;
 
@@ -56,9 +68,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         textView_gps_lat = findViewById(R.id.textview_gps_lat);
         textView_gps_lon = findViewById(R.id.textview_gps_lon);
+        textview_gps_lat_user = findViewById(R.id.textview_gps_lat_user);
+        textview_gps_lon_user = findViewById(R.id.textview_gps_lon_user);
         textView_time = findViewById(R.id.textview_time);
 
         linearLayoutManager = new LinearLayoutManager(this);
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(this, linearLayoutManager.getOrientation()));
@@ -110,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.toString());
                                     imageView.setImageBitmap(myBitmap);
                                 }
+                                getMyLocation();
                                 FileParsingArray= latelyAccidentFile.split(" ");
                                 time_val=FileParsingArray[0]+" "+FileParsingArray[1];
                                 gps_lat=FileParsingArray[2];
@@ -148,6 +164,44 @@ public class MainActivity extends AppCompatActivity {
                 connectFTP.ftpDownloadFile(currentPath +currentFileList[last_index][0], file.toString());
             }
         });
+    }
+
+    private void getMyLocation() {
+        LocationListener gpsLocationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+                float accuracy = location.getAccuracy();
+                Log.d(TAG, accuracy+"");
+
+                if ( 18<= accuracy && accuracy <=19 ) {
+                    textview_gps_lat_user.setText(Math.round(latitude * 1000000) / 1000000.0 + "");
+                    textview_gps_lon_user.setText(Math.round(longitude * 1000000) / 1000000.0 + "");
+                    Log.d(TAG, "gps updated "+latitude+" : "+longitude);
+                }
+
+            }
+            public void onStatusChanged(String provider, int status, Bundle extras) { }
+            public void onProviderEnabled(String provider) { }
+            public void onProviderDisabled(String provider) { }
+        };
+        // Register the listener with the Location Manager to receive location updates
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( MainActivity.this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    0 );
+        }
+        else{
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+        }
     }
 }
 
