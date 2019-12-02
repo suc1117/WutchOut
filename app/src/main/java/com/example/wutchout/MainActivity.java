@@ -26,8 +26,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.io.File;
@@ -38,6 +42,8 @@ import java.lang.String;
 
 public class MainActivity extends AppCompatActivity {
 
+    float warnDistance=100;
+
     Activity ac = this;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     Location locAccident, locUser;
     double longitude;
     double latitude;
-    boolean status;
+    boolean status, threadStop=false;
     int last_index=0;
     float distance;
     private ConnectFTP connectFTP;
@@ -54,17 +60,17 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     LocationManager lm;
     private NotificationManager notifManager;
+    private long time= 0;
 
-    String latelyAccidentFile, currentPath, makeFilePath, time_val, gps_lat, gps_lon;
+    String latelyAccidentFile, currentPath, makeFilePath, time_val, gps_lat, gps_lon, distanceUnit;
     String[] FileParsingArray;
     String[] FileGpsArray;
     String[][] currentFileList;
     ImageView imageView;
+    Button bgStart;
     Thread mainThread, getImageThread;
     File file;
     TextView textView_gps_lat, textView_gps_lon, textView_gps_lat_user, textView_gps_lon_user, textView_time, textView_distance;
-
-    private TextView dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         connectFTP = new ConnectFTP();
 
-        sharePref = getSharedPreferences("SHARE_PREF",MODE_PRIVATE);
+        sharePref = getSharedPreferences("SHARE_PREF", MODE_PRIVATE);
         editor = sharePref.edit();
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -82,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         textView_gps_lon_user = findViewById(R.id.textview_gps_lon_user);
         textView_time = findViewById(R.id.textview_time);
         textView_distance = findViewById(R.id.textview_distance);
+        bgStart = findViewById(R.id.btn_bgStart);
 
         linearLayoutManager = new LinearLayoutManager(this);
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -91,46 +98,55 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         imageView = findViewById(R.id.imageView1);
-        dir = findViewById(R.id.currentDir);
+
+        bgStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                Toast.makeText(MainActivity.this, "App Start In Background...", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mainThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    while (!Thread.currentThread().isInterrupted()) {
-                        status = false;
-                        status = connectFTP.ftpConnect(
-                                "117.16.174.33", //"211.229.241.115",
-                                "5678",
-                                "56785678",
-                                21);
+                while (!threadStop) {
+                    status = false;
+                    status = connectFTP.ftpConnect(
+                            "117.16.174.33", //"211.229.241.115",
+                            "5678",
+                            "56785678",
+                            21);
 
-                        if (!status == true) {
-                            Log.d(TAG, "Connection failed");
-                        } else {
-                            Log.d(TAG, "Connection Success");
-                            List<myFile> myfile = new ArrayList<>();
-                            currentPath = connectFTP.ftpGetDirectory();
-                            dir.setText("Path : " + currentPath);
-                            currentFileList = connectFTP.ftpGetFileList(currentPath);
-                            last_index = currentFileList.length - 1;
-                            latelyAccidentFile = currentFileList[last_index][0];
-                            if (!(sharePref.getString("latelyAccident", "0").equals(latelyAccidentFile))) {
-                                editor.putString("latelyAccident", latelyAccidentFile);
-                                editor.commit();
-                                getImageThread.start();
-                            }
+                    if (!status == true) {
+                        Log.d(TAG, "Connection failed");
+                    } else {
+                        Log.d(TAG, "Connection Success");
+                        List<myFile> myfile = new ArrayList<>();
+                        currentPath = connectFTP.ftpGetDirectory();
+                        currentFileList = connectFTP.ftpGetFileList(currentPath);
+                        last_index = currentFileList.length - 1;
+                        latelyAccidentFile = currentFileList[last_index][0];
+                        if (!(sharePref.getString("latelyAccident", "0").equals(latelyAccidentFile))) {
+                            editor.putString("latelyAccident", latelyAccidentFile);
+                            editor.commit();
+                            getImageThread.start();
+                        }
 
-                            // Update Files List
-                            for (int i = 0; i < currentFileList.length; i++) {
-                                myfile.add(new myFile(currentFileList[i][0], currentFileList[i][1]));
-                            }
+                        // Update Files List
+                        for (int i = 0; i < currentFileList.length; i++) {
+                            myfile.add(new myFile(currentFileList[i][0], currentFileList[i][1]));
+                        }
 
-                            // Update UI & ImageView
-                            recyclerViewAdapter = new RecyclerViewAdapter(ac, myfile);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                        // Update UI & ImageView
+                        recyclerViewAdapter = new RecyclerViewAdapter(ac, myfile);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!threadStop) {
                                     recyclerView.setAdapter(recyclerViewAdapter);
                                     File imgFile = new File(getApplicationContext().getFilesDir().toString(), "main.png");
                                     if (imgFile.exists()) {
@@ -140,10 +156,9 @@ public class MainActivity extends AppCompatActivity {
                                     getMyLocation();
                                     FileParsingArray = latelyAccidentFile.split(" ");
                                     time_val = FileParsingArray[0] + " " + FileParsingArray[1];
-                                    FileGpsArray= latelyAccidentFile.split(",");
+                                    FileGpsArray = latelyAccidentFile.split(",");
                                     gps_lat = FileGpsArray[1];
                                     gps_lon = FileGpsArray[2].substring(0, FileGpsArray[2].length() - 4);
-                                    Log.d(TAG, gps_lat+" : "+gps_lon);
 
                                     locAccident = new Location("accident point");
                                     locAccident.setLatitude(Double.parseDouble(gps_lat));
@@ -153,18 +168,14 @@ public class MainActivity extends AppCompatActivity {
                                     textView_gps_lat.setText(gps_lat);
                                     textView_gps_lon.setText(gps_lon);
                                 }
-                            });
-                            try {
-                                Thread.sleep(10000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
                             }
+                        });
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            Log.d(TAG, "Thread dead");
                         }
                     }
-                }
-                catch (Exception e) { }
-                finally {
-                    Log.d(TAG,"Thread is dead...");
                 }
             }
         });
@@ -205,12 +216,17 @@ public class MainActivity extends AppCompatActivity {
                     locUser.setLatitude(latitude);
                     locUser.setLongitude(longitude);
                     distance = locAccident.distanceTo(locUser);
-                    textView_distance.setText(distance+" m");
-                    Log.d(TAG, "gps updated "+latitude+" : "+longitude);
+                    if (distance/1000.0 > 1.0) {
+                        distance/=1000.0;
+                        distanceUnit="KM";
+                    }
+                    else
+                        distanceUnit="M";
+                    textView_distance.setText(distance+" "+distanceUnit);
                 }
-                if (distance != 0 && distance <=100) {
+                if (distance != 0 && distance <= warnDistance && distanceUnit=="M" && threadStop!=true) {
                     String strDistance = String.format("%.2f", distance);
-                    createNotification("remain distance : "+strDistance+"M  Be careful !!",MainActivity.this);
+                    createNotification("WARNING! Remain Distance To Accident : "+strDistance+"M !!!",MainActivity.this);
                     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                     boolean isScreenOn = Build.VERSION.SDK_INT >= 20 ? pm.isInteractive() : pm.isScreenOn(); // check if screen is on
                     if (!isScreenOn) {
@@ -246,9 +262,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        threadStop=true;
         mainThread.interrupt();
+        finish();
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
+
     public void createNotification(String aMessage, Context context) {
         final int NOTIFY_ID = 0; // ID of notification
         String id = "0"; // default_channel_id
@@ -301,6 +321,16 @@ public class MainActivity extends AppCompatActivity {
         }
         Notification notification = builder.build();
         notifManager.notify(NOTIFY_ID, notification);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(System.currentTimeMillis()-time>=2000){
+            time=System.currentTimeMillis();
+            Toast.makeText(getApplicationContext(),"Press the back button again to exit...",Toast.LENGTH_SHORT).show();
+        }else if(System.currentTimeMillis()-time<2000){
+            finish();
+        }
     }
 }
 
