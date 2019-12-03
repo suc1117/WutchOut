@@ -266,7 +266,6 @@ public class MainActivity extends AppCompatActivity {
         mainThread.interrupt();
         finish();
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
     }
 
     public void createNotification(String aMessage, Context context) {

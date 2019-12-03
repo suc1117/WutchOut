@@ -9,13 +9,17 @@
     android:layout_weight="1"
     tools:context=".MainActivity">
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Wutchout"
-        android:textAlignment="center"
-        android:textSize="24pt" />
+        android:src="@mipmap/wut_logo"
+        android:textAlignment="center"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.52">
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
