@@ -65,7 +65,7 @@ Project is created with:
 
     User can check accident location in map(①)
 
-    click the button to return to main page
+    Click the button return to main page
 
 4. Total Process
 
