@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     String[] FileParsingArray;
     String[] FileGpsArray;
     String[][] currentFileList;
-    ImageView imageView;
+    ImageView imageView, obstacleImageView;
     Button bgStart;
     Thread mainThread, getImageThread;
     File file;
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         sharePref = getSharedPreferences("SHARE_PREF", MODE_PRIVATE);
         editor = sharePref.edit();
 
+        obstacleImageView = findViewById(R.id.imageView1);
         recyclerView = findViewById(R.id.recyclerView);
         textView_gps_lat = findViewById(R.id.textview_gps_lat);
         textView_gps_lon = findViewById(R.id.textview_gps_lon);
@@ -107,6 +108,16 @@ public class MainActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_HOME);
                 startActivity(intent);
                 Toast.makeText(MainActivity.this, "App Start In Background...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        obstacleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GoogleMapActivity.class);
+                intent.putExtra("lat",gps_lat);
+                intent.putExtra("lon",gps_lon);
+                startActivity(intent);
             }
         });
 
@@ -194,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d(TAG, "makeFilePath==desFilePath : "+ makeFilePath);
                 try {
+                    mainThread.join();
                     file.createNewFile();
                     Log.d(TAG, "file.createNewFile()");
                 } catch (Exception e){}
