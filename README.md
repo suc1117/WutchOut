@@ -1,4 +1,6 @@
-<img src="https://user-images.githubusercontent.com/48272857/69966580-0b5b6380-155a-11ea-9a33-4309eb6de386.png" width=300px>
+# WutchOut 
+
+<img src="https://user-images.githubusercontent.com/48272857/70144917-42f51780-16e2-11ea-9634-df2cc783ee5a.png" width=300px>
 
 ## General info
 Android Application for [5678](https://github.com/suc1117/5678 "5678")
@@ -19,9 +21,10 @@ Project is created with:
 
 1. Application Layout
 
-    <img src="https://user-images.githubusercontent.com/48272857/70027084-a13bd080-15e4-11ea-9dfe-3c99e2fa6159.png" width=300px>
+    <img src="https://user-images.githubusercontent.com/48272857/70145083-a4b58180-16e2-11ea-9b03-5116cc025bf3.png" width=300px>
 
-    ① Update lately obstacle image <br>
+    ① Update lately obstacle image <br> 
+    (click the image to show accident location detail in Google Map) <br>
     ② Scrollable accident record list <br>
     ③ Update GPS and Time about lately accident information <br>
     ④ Update GPS about User current location <br>
@@ -42,7 +45,7 @@ Project is created with:
 
     1. In Application
 
-        <img src="https://user-images.githubusercontent.com/48272857/70027852-7488b880-15e6-11ea-866a-2d531017690f.png" width=300px>
+        <img src="https://user-images.githubusercontent.com/48272857/70145043-8e0f2a80-16e2-11ea-9df9-d0a4433f395f.png" width=300px>
 
         Click button to start in background
 
@@ -52,11 +55,20 @@ Project is created with:
 
         Click on the notification to enter the app
         
-        <img src="https://user-images.githubusercontent.com/48272857/70042691-ac9df480-1602-11ea-85fa-0170de92fbba.png" width=300px>
+        <img src="https://user-images.githubusercontent.com/48272857/70145615-e1ce4380-16e3-11ea-90ca-e93b741da7d0.png" width=300px>
 
-        Click back button to exit the app
+        Click back button twice to exit the app
 
-3. Total Process
+3. Google Map
+
+    <img src="https://user-images.githubusercontent.com/48272857/70145221-ef36fe00-16e2-11ea-82af-69b8aa0b74d8.png" width=300px>
+
+    User can check accident location in map(①)
+
+    click the button to return to main page
+
+4. Total Process
 
     <img src="https://user-images.githubusercontent.com/48272857/70041751-0d2c3200-1601-11ea-8c6d-7b1a5f7bc782.gif" width=300px>
-
+    (old version)
+    
