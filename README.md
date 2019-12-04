@@ -45,12 +45,12 @@ Project is created with:
 
     1. In Application
 
-        <img src="https://user-images.githubusercontent.com/48272857/70145043-8e0f2a80-16e2-11ea-9df9-d0a4433f395f.png" width=300px>
-
-        Click button to start in background
+        <img src="https://user-images.githubusercontent.com/48272857/70145870-5d2ff500-16e4-11ea-8c84-b1b940057d6f.png" width=300px>
 
     2. In Background
-
+    
+        (Click button to start in background)
+        
         <img src="https://user-images.githubusercontent.com/48272857/70027857-76eb1280-15e6-11ea-8165-4c60343de400.png" width=300px>
 
         Click on the notification to enter the app
