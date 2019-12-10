@@ -196,18 +196,13 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 makeFilePath = getApplicationContext().getFilesDir().toString();
                 file = new File(makeFilePath,"main.png");
-                Log.d(TAG, "file : "+file);
                 File parent_dir = file.getParentFile();
-                Log.d(TAG, "parent_dir : "+parent_dir);
                 if (parent_dir != null) {
                     parent_dir.mkdirs();
-                    Log.d(TAG, "mkdir()");
                 }
-                Log.d(TAG, "makeFilePath==desFilePath : "+ makeFilePath);
                 try {
                     mainThread.join();
                     file.createNewFile();
-                    Log.d(TAG, "file.createNewFile()");
                 } catch (Exception e){}
                 connectFTP.ftpDownloadFile(currentPath +currentFileList[last_index][0], file.toString());
             }
@@ -220,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
                 float accuracy = location.getAccuracy();
-                Log.d(TAG, accuracy+"");
                 locUser = new Location("User point");
                 if ( 18<= accuracy && accuracy <=20 ) {
                     textView_gps_lat_user.setText(Math.round(latitude * 1000000) / 1000000.0 + "");

@@ -95,10 +95,6 @@ public class ConnectFTP {
     public boolean ftpDownloadFile(String srcFilePath, String desFilePath) {
         boolean result = false;
         try{
-            Log.d(TAG, "srcFilePath : "+srcFilePath);
-            Log.d(TAG, "desFilePath : "+desFilePath);
-            //mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
-            //mFTPClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
             FileOutputStream fos = new FileOutputStream(desFilePath);
             result = mFTPClient.retrieveFile(srcFilePath, fos);
             fos.close();

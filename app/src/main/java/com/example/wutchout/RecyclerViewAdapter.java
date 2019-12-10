@@ -26,13 +26,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
         View view;
-        TextView name, type;
+        TextView name;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            name = (TextView) itemView.findViewById(R.id.ListFilename);
-            // type = (TextView) itemView.findViewById(R.id.ListFiletype);
+            name = itemView.findViewById(R.id.ListFilename);
         }
     }
 
@@ -48,6 +47,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String name= data.getName().substring(0, data.getName().length() - 4);
 
         holder.name.setText(name);
-        // holder.type.setText(data.getType());
     }
 }

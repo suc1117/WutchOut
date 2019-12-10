@@ -1,7 +1,6 @@
 package com.example.wutchout;
 
 import android.Manifest;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -44,7 +43,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    @Override //구글맵을 띄울준비가 됬으면 자동호출된다.
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -55,12 +54,9 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         oneMarker();
     }
 
-    //마커하나찍는 기본 예제
     public void oneMarker() {
-        // 서울 여의도에 대한 위치 설정
         LatLng Accident = new LatLng(lat, lon);
 
-        // 구글 맵에 표시할 마커에 대한 옵션 설정  (알파는 좌표의 투명도이다.)
         MarkerOptions makerOptions = new MarkerOptions();
         makerOptions
                 .position(Accident)
