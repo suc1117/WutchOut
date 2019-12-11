@@ -1,7 +1,7 @@
 <a id=top></a>
 
 # WutchOut 
-<img src="https://user-images.githubusercontent.com/48272857/70144917-42f51780-16e2-11ea-9634-df2cc783ee5a.png" width=300px>
+<img src="https://user-images.githubusercontent.com/48272857/70604670-5fda9f00-1c3c-11ea-83d1-828135ad58dc.png" width=300px>
 
 ## General info
 Android Application for [5678](https://github.com/suc1117/5678 "5678")
@@ -12,7 +12,7 @@ It help check accident location information also distance to user location
 
 When user come nearby accident location, It notice through notification even if user not using phone
 
-Download : [google drive](https://drive.google.com/file/d/1aqKsT5U4Cfh_Ob-oeHmpL8g98qPb5lrU/view?usp=sharing)
+Download : [google drive](https://drive.google.com/file/d/1qZLCeruprxjseQ0McW7ng6tFVaqShuP7/view?usp=sharing)
 
 ## Technologies
 Project is created with:
@@ -24,15 +24,17 @@ Project is created with:
 
 1. Application Layout
 
-    <img src="https://user-images.githubusercontent.com/48272857/70145083-a4b58180-16e2-11ea-9b03-5116cc025bf3.png" width=300px>
+    <img src="https://user-images.githubusercontent.com/48272857/70604664-5ea97200-1c3c-11ea-8c0f-a633a4b30099.png" width=300px>
 
     ① Update lately obstacle image <br> 
     (click the image to show accident location detail in Google Map) <br>
-    ② Scrollable accident record list <br>
-    ③ Update GPS and Time about lately accident information <br>
-    ④ Update GPS about User current location <br>
-    ⑤ Measure distance user to accident location <br>
-    ⑥ Start application in the background button <br>
+    ② Scrollable accident record list. It's contain about time and gps<br>
+    ③ Update GPS about lately accident <br>
+    ④ Update Time about lately accident <br>
+    ⑤ Update Predict distance (Vehicle to Obstalce) <br> 
+    ⑥ Update GPS about User current location <br>
+    ⑦ Measure distance user to accident location <br>
+    ⑧ Start application in the background button <br>
 
 2. Notification<a id="notify"></a>
 
@@ -199,9 +201,9 @@ runOnUiThread(new Runnable() {
 <u>이와 같은 형식이 아니라면 **파싱과정에서 오류가 생깁니다.**</u><br>
 
 ```
-2019-12-03 16-58-02 ,36.834034,127.179329.jpg
+2019-12-03 16-58-02 ,36.834034,127.179329,3.65879564.jpg
 
-(년-월-일 시-분-초 ,위도 ,경도.jpg) (GPS 소수점 올림은 기본값 6자리입니다.)
+(년-월-일 시-분-초 ,위도,경도,예측거리.jpg) (GPS 소수점 올림은 기본값 6자리입니다.)
 ```
 
 다음은 시간정보와 위치정보를 파싱하는 코드입니다.
@@ -212,7 +214,8 @@ FileParsingArray = latelyAccidentFile.split(" ");
 time_val = FileParsingArray[0] + " " + FileParsingArray[1];
 FileGpsArray = latelyAccidentFile.split(",");
 gps_lat = FileGpsArray[1];
-gps_lon = FileGpsArray[2].substring(0, FileGpsArray[2].length() - 4);
+gps_lon = FileGpsArray[2];
+pred_dist = FileGpsArray[3].substring(0, FileGpsArray[3].length() - 4);
 ```
 
 #### 이미지 다운로드<a id="imagedownload"></a>
