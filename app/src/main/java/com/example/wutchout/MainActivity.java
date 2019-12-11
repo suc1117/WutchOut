@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
     Location locAccident, locUser;
-    double longitude;
-    double latitude;
+    double longitude, latitude;
     boolean status, threadStop=false;
     int last_index=0;
     float distance;
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notifManager;
     private long time= 0;
 
-    String latelyAccidentFile, currentPath, makeFilePath, time_val, gps_lat, gps_lon, distanceUnit;
+    String latelyAccidentFile, currentPath, makeFilePath, time_val, gps_lat, gps_lon, distanceUnit, pred_dist;
     String[] FileParsingArray;
     String[] FileGpsArray;
     String[][] currentFileList;
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     Button bgStart;
     Thread mainThread, getImageThread;
     File file;
-    TextView textView_gps_lat, textView_gps_lon, textView_gps_lat_user, textView_gps_lon_user, textView_time, textView_distance;
+    TextView textView_gps_lat, textView_gps_lon, textView_gps_lat_user, textView_gps_lon_user, textView_pred_dist, textView_time, textView_distance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         textView_gps_lon = findViewById(R.id.textview_gps_lon);
         textView_gps_lat_user = findViewById(R.id.textview_gps_lat_user);
         textView_gps_lon_user = findViewById(R.id.textview_gps_lon_user);
+        textView_pred_dist = findViewById(R.id.textview_predict_dist);
         textView_time = findViewById(R.id.textview_time);
         textView_distance = findViewById(R.id.textview_distance);
         bgStart = findViewById(R.id.btn_bgStart);
@@ -169,13 +169,15 @@ public class MainActivity extends AppCompatActivity {
                                     time_val = FileParsingArray[0] + " " + FileParsingArray[1];
                                     FileGpsArray = latelyAccidentFile.split(",");
                                     gps_lat = FileGpsArray[1];
-                                    gps_lon = FileGpsArray[2].substring(0, FileGpsArray[2].length() - 4);
+                                    gps_lon = FileGpsArray[2];
+                                    pred_dist = FileGpsArray[3].substring(0, FileGpsArray[3].length() - 4);
 
                                     locAccident = new Location("accident point");
                                     locAccident.setLatitude(Double.parseDouble(gps_lat));
                                     locAccident.setLongitude(Double.parseDouble(gps_lon));
 
                                     textView_time.setText(time_val);
+                                    textView_pred_dist.setText(Math.round(Double.parseDouble(pred_dist)*100)/100.0+"M");
                                     textView_gps_lat.setText(gps_lat);
                                     textView_gps_lon.setText(gps_lon);
                                 }

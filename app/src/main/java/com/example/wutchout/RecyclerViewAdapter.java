@@ -44,8 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         myFile data = file.get(position);
-        String name= data.getName().substring(0, data.getName().length() - 4);
-
+        String name= data.getName().substring(0, data.getName().length() - 13);
         holder.name.setText(name);
     }
 }

@@ -14,13 +14,4 @@
         android:textSize="10dp"
         android:text=""/>
 
-    <!--<TextView-->
-        <!--android:id="@+id/ListFiletype"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="0"-->
-        <!--android:textColor="@android:color/darker_gray"-->
-        <!--android:textSize="10dp"-->
-        <!--android:text=""/>-->
-
 </LinearLayout>

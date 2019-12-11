@@ -164,6 +164,25 @@
                 android:layout_weight="0.6"
                 android:text="Time"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/customborder">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:text="Predict Distance (Vehicle to Obstacle) : "/>
+
+            <TextView
+                android:id="@+id/textview_predict_dist"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:text="0.00M"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
