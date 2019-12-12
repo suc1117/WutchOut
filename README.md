@@ -145,6 +145,84 @@ Project is created with:
 
 3. GoogleMapActivity.java
 
+    1. Google Developers Console 사이트 [링크](https://console.developers.google.com/apis/dashboard "링크")에 접속하여 프로젝트 만들기를 클릭합니다.
+    
+    2. 프로젝트 이름을 적고 만들기를 클릭합니다.
+
+    3. Google Maps Android API를 사용하려면 추가 설정이 필요합니다.  API 및 사용 서비스 사용 설정을 클릭합니다.
+
+    4. google maps android를 검색하여 Maps SDK for Android를 선택합니다. 
+
+    5. 사용 설정을 클릭합니다.
+
+    6. API가 활성화 되었습니다. 인증 설정을 하기 위해 사용자 인증 정보를 클릭합니다. 
+
+    7. 사용자 인증 정보 만들기를 클릭하여 보이는 메뉴에서 API 키를 클릭합니다.
+
+    8. 키 제한을 클릭합니다.
+
+    9. 앞에서 생성된 API 키에 사용 제한을 둘 수 있는 웹페이지가 보입니다. 애플리케이션 제한사항, API 제한사항을 설정할 수 있습니다.
+
+    10. Android 앱을 선택하고 항목 추가를 클릭합니다.
+
+    11. Google Maps Android API를 사용할 안드로이드 프로젝트의 패키지 이름과 Android Studio가 설치된 컴퓨터에서 생성된 SHA-1 인증서 지문이 필요합니다.
+
+    12. SHA-1 인증서 지문을 얻기 위한 과정부터 진행합니다.  윈도우키 + R을 누른 후 cmd를 입력하고 엔터를 눌러서 명령 프롬프트 창을 엽니다. 
+
+    13. 윈도우에서는  다음 명령으로 SHA-1 인증서 지문을 획득할 수 있습니다.
+    ("C:\Program Files\Android\Android Studio\jre\bin\keytool" -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android) 
+    SHA1 옆에 있는 문자열을 복사해 둡니다.
+
+    14. Google Developers Console 사이트에  복사해두었던 패키지 이름과 SHA-1 인증서 지문을 붙여넣기하고 완료를 클릭합니다.  
+
+    15. API 제한사항에서  키 제한을 선택하고 콤보박스에서 Maps SDK for Android를 체크합니다.  이제 저장을 클릭합니다.
+
+    16. API 키를 복사해둡니다.
+
+    17. 매네페스트 파일 AndroidManifest.xml의 application 태그 하위요소로 meta-data 태그를 사용하여 복사해둔 API키를 입력해줍니다.
+
+    18. Google Maps Android API를 사용하려면 Google Play services 라이브러리 패키지를 설치해줘야 합니다.<br>
+    안드로이드 스튜디오로 돌아와서 메뉴에서 Tools > SDK Manager를 선택합니다.
+    SDK Tools 탭을 클릭하고 Google Play services 항목을 체크하고 Apply를 클릭하여 설치를 진행합니다.
+
+    19.  모듈 app의 build.gradle에 Google Play Services 라이브러리를 프로젝트에서 사용한다고 추가해줘야 합니다.<br>
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    추가해 준 후 , Sync Now를 클릭합니다.
+
+    다음 내용은 [링크](https://webnautes.tistory.com/647?category=618190 "링크")를 참고했습니다.
+
+    진행하던중에  Android Studio 3.3으로 업데이트후 다음과 같은 에러가 발생했습니다. 
+
+    ```
+    E/AndroidRuntime: FATAL EXCEPTION: Thread-6
+    Process: com.tistory.webnautes.googlemapsandroidapiexample, PID: 7919
+    java.lang.NoClassDefFoundError: Failed resolution of: Lorg/apache/http/ProtocolVersion;
+        at ez.b(:com.google.android.gms.dynamite_mapsdynamite@14799088@14.7.99 (100800-223214910):3)
+        at ey.a(:com.google.android.gms.dynamite_mapsdynamite@14799088@14.7.99 (100800-223214910):3)
+        at fa.a(:com.google.android.gms.dynamite_mapsdynamite@14799088@14.7.99 (100800-223214910):15)
+        at com.google.maps.api.android.lib6.drd.al.a(:com.google.android.gms.dynamite_mapsdynamite@14799088@14.7.99 (100800-223214910):6)
+        at ed.a(:com.google.android.gms.dynamite_mapsdynamite@14799088@14.7.99 (100800-223214910):21)
+        at ed.run(:com.google.android.gms.dynamite_mapsdynamite@14799088@14.7.99 (100800-223214910):8)
+     Caused by: java.lang.ClassNotFoundException: Didn't find class "org.apache.http.ProtocolVersion" on path: DexPathList[[zip file "/data/user_de/0/com.google.android.gms/app_chimera/m/0000000d/MapsDynamite.apk"],nativeLibraryDirectories=[/data/user_de/0/com.google.android.gms/app_chimera/m/0000000d/MapsDynamite.apk!/lib/x86_64, /system/lib64]]
+     ```
+
+
+     매네페스트 파일 AndroidManifest.xml의 <application> 태그 하위요소로 다음 한줄을 추가해서 해결했습니다.<br>
+
+     ```
+     uses-library android:name="org.apache.http.legacy" android:required="false"
+     ```
+
+     이제 구글맵에 현재위치를 표시해보겠습니다.
+
+     현재위치를 표시하기위해 추가한 코드내용은 다음링크를 참고하였습니다.
+     [링크](https://github.com/suc1117/WutchOut/blob/master/app/src/main/java/com/example/wutchout/GoogleMapActivity.java "링크")
+
+
+
+
+
 
 
 4. MainActivity.java
